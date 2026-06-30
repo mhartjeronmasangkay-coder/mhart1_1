@@ -6,12 +6,14 @@ type Query {
 type Mutation {
     createSubject(
         name: String!
+        description: String
         is_published: Boolean
     ): Subject @create
 
     updateSubject(
         id: ID!
         name: String
+        description: String
         is_published: Boolean
     ): Subject @update
 
@@ -21,6 +23,7 @@ type Mutation {
 type Subject {
     id: ID!
     name: String!
+    description: String
     is_published: Boolean!
     created_at: String!
     updated_at: String!

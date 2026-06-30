@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'paths' => ['api/*'],
+    'paths' => ['api/*', 'graphql'],
     'allowed_methods' => ['*'],
     'allowed_origins' => [
         'http://localhost:4200',
