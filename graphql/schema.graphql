@@ -1,0 +1,27 @@
+type Query {
+    subjects: [Subject!]! @all
+    subject(id: ID! @eq): Subject @find
+}
+
+type Mutation {
+    createSubject(
+        name: String!
+        is_published: Boolean
+    ): Subject @create
+
+    updateSubject(
+        id: ID!
+        name: String
+        is_published: Boolean
+    ): Subject @update
+
+    deleteSubject(id: ID! @whereKey): Subject @delete
+}
+
+type Subject {
+    id: ID!
+    name: String!
+    is_published: Boolean!
+    created_at: String!
+    updated_at: String!
+}
