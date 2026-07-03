@@ -8,6 +8,9 @@ class Subject extends Model
 {
     protected $fillable = [
         'name',
+        'description',
+        'icon',
+        'color',
         'is_published',
     ];
 
