@@ -9,10 +9,13 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
 
 class ProcessCsvImport implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+    public $tries = 1;
 
     public function __construct(
         protected string $path,
@@ -21,7 +24,7 @@ class ProcessCsvImport implements ShouldQueue
 
     public function handle(): void
     {
-        $fullPath = $this->path;
+        $fullPath = Storage::path($this->path);
 
         if (! is_file($fullPath)) {
             Cache::put("import:{$this->jobId}", [
@@ -33,8 +36,9 @@ class ProcessCsvImport implements ShouldQueue
 
             return;
         }
+
         $handle = fopen($fullPath, 'r');
-        $header = fgetcsv($handle); // expects: name,description
+        $header = fgetcsv($handle);
 
         $rows = [];
         while (($row = fgetcsv($handle)) !== false) {
@@ -78,6 +82,6 @@ class ProcessCsvImport implements ShouldQueue
             'status' => 'completed', 'processed' => $processed, 'total' => $total, 'errors' => $errors,
         ], now()->addHour());
 
-        @unlink($this->path);
+        Storage::delete($this->path);
     }
 }

@@ -28,3 +28,21 @@ type Subject {
     created_at: String!
     updated_at: String!
 }
+
+scalar Upload @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Upload")
+
+type ImportStatus {
+    jobId: String
+    status: String!
+    processed: Int!
+    total: Int!
+    errors: [String!]!
+}
+
+extend type Mutation {
+    importSubjectsCsv(file: Upload!): ImportStatus! @field(resolver: "App\\GraphQL\\Mutations\\ImportSubjectsCsv")
+}
+
+extend type Query {
+    importStatus(jobId: String!): ImportStatus! @field(resolver: "App\\GraphQL\\Queries\\ImportStatus")
+}
