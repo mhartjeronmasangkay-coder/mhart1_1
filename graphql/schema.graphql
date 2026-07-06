@@ -46,3 +46,78 @@ extend type Mutation {
 extend type Query {
     importStatus(jobId: String!): ImportStatus! @field(resolver: "App\\GraphQL\\Queries\\ImportStatus")
 }
+
+
+type QuestionGroup {
+    id: ID!
+    subject_id: ID!
+    name: String!
+    created_at: String!
+    updated_at: String!
+    questions: [Question!]! @hasMany
+}
+
+type Question {
+    id: ID!
+    question_group_id: ID!
+    question_text: String!
+    created_at: String!
+    updated_at: String!
+    answers: [Answer!]! @hasMany
+}
+
+type Answer {
+    id: ID!
+    question_id: ID!
+    answer_text: String!
+    is_correct: Boolean!
+    order: Int!
+    created_at: String!
+    updated_at: String!
+}
+
+extend type Query {
+    questionGroups(subject_id: ID! @eq): [QuestionGroup!]! @all
+    questionGroup(id: ID! @eq): QuestionGroup @find
+}
+
+extend type Mutation {
+    createQuestionGroup(
+        subject_id: ID!
+        name: String!
+    ): QuestionGroup @create
+
+    createQuestion(
+        question_group_id: ID!
+        question_text: String!
+        answers: [CreateAnswerInput!]!
+    ) : Question @field(resolver: "App\\GraphQL\\Mutations\\CreateQuestionWithAnswers")
+
+    deleteQuestionGroup(id: ID! @whereKey): QuestionGroup @delete
+    deleteQuestion(id: ID! @whereKey): Question @delete
+}
+
+input CreateAnswerInput {
+    answer_text: String!
+    is_correct: Boolean!
+    order: Int!
+}
+
+extend type Mutation {
+    importQuestionsCsv(question_group_id: ID!, file: Upload!): ImportStatus! @field(resolver: "App\\GraphQL\\Mutations\\ImportQuestionsCsv")
+}
+
+extend type Mutation {
+    updateQuestion(
+        id: ID!
+        question_text: String!
+        answers: [UpdateAnswerInput!]!
+    ): Question @field(resolver: "App\\GraphQL\\Mutations\\UpdateQuestionWithAnswers")
+}
+
+input UpdateAnswerInput {
+    id: ID
+    answer_text: String!
+    is_correct: Boolean!
+    order: Int!
+}

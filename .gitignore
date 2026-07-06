@@ -25,3 +25,8 @@ _ide_helper.php
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+# Typst test/temp artifacts
+resources/typst/output.pdf
+resources/typst/test-data.json
+resources/typst/tmp_*.json

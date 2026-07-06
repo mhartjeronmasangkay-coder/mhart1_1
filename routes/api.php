@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\ImportController;
+use App\Http\Controllers\PdfController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -17,6 +18,7 @@ Route::post('/subjects/import', [ImportController::class, 'import']);
 Route::get('/subjects/import/{jobId}/status', [ImportController::class, 'status']);
 Route::get('/subjects/export', [ExportController::class, 'export']);
 
+
 // ── PROTECTED ROUTES (token required) ──
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
@@ -26,4 +28,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/profile', [ProfileController::class, 'show']);
     Route::put('/profile', [ProfileController::class, 'update']);
     Route::delete('/profile', [ProfileController::class, 'destroy']);
+
+    // PDF generation
+    Route::post('/questions/generate-pdf', [PdfController::class, 'generate']);
 });
